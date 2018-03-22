@@ -223,12 +223,12 @@ func messageLoop() {
 	if f == nil {
 		utils.Fatalf("filter is not installed")
 	}
-
+	//生成一个50毫秒的ticker
 	ticker := time.NewTicker(time.Millisecond * 50)
 
 	for {
 		select {
-		case <-ticker.C:
+		case <-ticker.C: //chan Time
 			messages := f.Retrieve()
 			for _, msg := range messages {
 				printMessageInfo(msg)
@@ -242,7 +242,7 @@ func messageLoop() {
 //界面输出消息
 func printMessageInfo(msg *whisper.ReceivedMessage) {
 	text := string(msg.Payload)
-	timestamp := time.Unix(int64(msg.Sent), 0).Format("2018-03-22 15:04:05")
+	timestamp := time.Unix(int64(msg.Sent), 0).Format("2006-01-02 15:04:05")
 	var address common.Address
 	if msg.Src != nil {
 		address = crypto.PubkeyToAddress(*msg.Src)
