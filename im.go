@@ -107,7 +107,7 @@ func run() {
 	//控制台发送消息
 	sendLoop()
 }
-
+//开启p2p.server
 func startServer() {
 	err := server.Start()
 	if err != nil {
@@ -122,7 +122,7 @@ func startServer() {
 
 	fmt.Printf("Please type the message. To quit type: '%s'\n", quitCommand)
 }
-
+//配置节点相关属性
 func configureNode() {
 	symKeyID, err := shh.AddSymKeyFromPassword(*argPass)
 	if err != nil {
@@ -135,7 +135,7 @@ func configureNode() {
 	copy(topic[:], common.FromHex(*argTopic))
 	fmt.Printf("Filter is configured for the topic: %x \n", topic)
 }
-
+//订阅关注的消息
 func subscribeMessage() {
 	var err error
 
@@ -151,7 +151,7 @@ func subscribeMessage() {
 		utils.Fatalf("Failed to install filter: %s", err)
 	}
 }
-
+//等待节点连接
 func waitForConnection(timeout bool) {
 	var cnt int
 	var connected bool
