@@ -17,6 +17,7 @@ import (
 	"github.com/ethereum/go-ethereum/p2p/discover"
 	ethparams "github.com/ethereum/go-ethereum/params"
 	whisper "github.com/ethereum/go-ethereum/whisper/whisperv5"
+	"github.com/urfave/cli"
 )
 
 const (
@@ -48,9 +49,23 @@ var (
 )
 
 func main() {
+	app := cli.NewApp()
+	app.Version = "0.0.1"
+	app.Action = goIM
+	app.Copyright = "Copyright 2018-2020 The go-im Authors"
+
+	if err := app.Run(os.Args); err != nil{
+		fmt.Println(os.Stderr, err)
+		os.Exit(1)
+	}
+}
+
+func goIM(ctx *cli.Context) error {
 	flag.Parse()
 	initialize()
 	run()
+
+	return nil
 }
 
 func initialize() {
