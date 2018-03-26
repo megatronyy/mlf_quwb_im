@@ -46,14 +46,17 @@ var (
 	argVerbosity = flag.Int("verbosity", int(log.LvlError), "log verbosity level")
 	argTopic     = flag.String("topic", "44c7429f", "topic in hexadecimal format (e.g. 70a4beef)")
 	argPass      = flag.String("password", "123456", "message's encryption password")
+	app = cli.NewApp()
 )
 
-func main() {
-	app := cli.NewApp()
+func init()  {
 	app.Version = "0.0.1"
 	app.Action = goIM
 	app.Copyright = "Copyright 2018-2020 The go-im Authors"
+	app.Usage = "this is a IM tool"
+}
 
+func main() {
 	if err := app.Run(os.Args); err != nil{
 		fmt.Println(os.Stderr, err)
 		os.Exit(1)
