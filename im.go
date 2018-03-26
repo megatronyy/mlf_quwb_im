@@ -41,23 +41,52 @@ var (
 	filterID string
 )
 
+var (
+	DataDirFlag = utils.DirectoryFlag{
+		Name:  "datadir",
+		Usage: "Data directory for the databases and keystore",
+		Value: utils.DirectoryString{ "datadir" },
+	}
+)
+
 //cmd arguments
 var (
 	argVerbosity = flag.Int("verbosity", int(log.LvlError), "log verbosity level")
 	argTopic     = flag.String("topic", "44c7429f", "topic in hexadecimal format (e.g. 70a4beef)")
 	argPass      = flag.String("password", "123456", "message's encryption password")
+)
+
+var (
+	initCommand = cli.Command{
+		Name:  "init",
+		Usage: "初始化程序",
+		Action: func(c *cli.Context) error {
+			fmt.Println("命令测试")
+			return nil
+		},
+	}
+
+	nodeFlags = []cli.Flag{
+		DataDirFlag,
+	}
+
 	app = cli.NewApp()
 )
 
-func init()  {
+func init() {
 	app.Version = "0.0.1"
 	app.Action = goIM
 	app.Copyright = "Copyright 2018-2020 The go-im Authors"
 	app.Usage = "this is a IM tool"
+	app.Commands = []cli.Command{
+		initCommand,
+	}
+
+	app.Flags = append(app.Flags, nodeFlags...)
 }
 
 func main() {
-	if err := app.Run(os.Args); err != nil{
+	if err := app.Run(os.Args); err != nil {
 		fmt.Println(os.Stderr, err)
 		os.Exit(1)
 	}
@@ -125,6 +154,7 @@ func run() {
 	//控制台发送消息
 	sendLoop()
 }
+
 //开启p2p.server
 func startServer() {
 	err := server.Start()
@@ -140,6 +170,7 @@ func startServer() {
 
 	fmt.Printf("Please type the message. To quit type: '%s'\n", quitCommand)
 }
+
 //配置节点相关属性
 func configureNode() {
 	symKeyID, err := shh.AddSymKeyFromPassword(*argPass)
@@ -153,6 +184,7 @@ func configureNode() {
 	copy(topic[:], common.FromHex(*argTopic))
 	fmt.Printf("Filter is configured for the topic: %x \n", topic)
 }
+
 //订阅关注的消息
 func subscribeMessage() {
 	var err error
@@ -169,6 +201,7 @@ func subscribeMessage() {
 		utils.Fatalf("Failed to install filter: %s", err)
 	}
 }
+
 //等待节点连接
 func waitForConnection(timeout bool) {
 	var cnt int
